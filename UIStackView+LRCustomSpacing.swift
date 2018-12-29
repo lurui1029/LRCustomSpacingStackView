@@ -1,12 +1,3 @@
-
-//
-//  LRStackView.swift
-//  RippleListening
-//
-//  Created by LuRui on 2018/12/28.
-//  Copyright © 2018 Ripple. All rights reserved.
-//
-
 import UIKit
 
 
