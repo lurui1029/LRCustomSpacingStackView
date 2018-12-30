@@ -55,8 +55,14 @@ pod 'LRCustomSpacingStackView', '~> 1.0.0'
 Simply download `UIStackView+LRCustomSpacing.swift`, drag it to your project.
 
 ## Note
-This library is designed to support custom spacing for UIStackView without breaking any builtin behaviors.
+This library is designed to support custom spacing for UIStackView without breaking any builtin behaviors, but custom spacing you specified in `UIView`'s `lr_stackSpacing` property has the highest priority in the final layout. That is:
 
-A good practice is to, always set up your stack view and subviews using regular APIs, make sure it works, after that, replace builtin methods with this library's
+1. You can set `UIStackView.spacing` to add a fixed spacing for all subviews, and then set some subviews' `lr_stackSpacing` for extra spacings.
+    
+2. You can still use `setCustomSpacing(_:after:)`, although you don't have to in almost all cases.
+    
+3. It is still your responsibility to make sure your stack view is free of conflicts. Nothing is different from setting up a regular UIStackView using Auto Layout, **except that a subview's size in the eye of the stack view is actually the sum of the subview's size  and its `lr_stackSpacing` insets.** This may cause conflicts sometimes. For example, if your stack view's axis is vertical and width is 300, a subview's width is also 300, in this case, this subview's width + `lr_stackSpacing.left` + `lr_stackSpacing.right` must <= 300. Otherwise, the stack view considers this subview's width is larger than its own width, which is a conflict for a vertical stack view. To prevent this, set up your subview's size with a low priority (so that the stack view can resize subviews based on its axis, spacing, distribution and alignment), or make the stack view self-growing at its axis.
+
+A good practice is to, always set up your stack view and subviews using regular `UIStackView` APIs, make sure it is free of conflicts, after that, replace builtin methods with this library's
 
 PRs and Issues are welcome.
