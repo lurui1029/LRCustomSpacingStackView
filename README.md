@@ -4,18 +4,20 @@
 [![Pod Platform](http://img.shields.io/cocoapods/p/LRCustomSpacingStackView.svg?style=flat)](http://cocoadocs.org/docsets/LRCustomSpacingStackView/)
 [![Pod License](http://img.shields.io/cocoapods/l/LRCustomSpacingStackView.svg?style=flat)](https://mit-license.org)
 
-UIStackView officially supports custom spacing after iOS 11. This library makes it easier to use, and also work on iOS 9.
+UIStackView officially supports custom spacing on iOS 11. This library makes it easier to use, and also work on iOS 9 +.
 
 ## Features
 - [x] Custom spacing support on iOS 9 and above
-- [X] Spacing after and/or before the arrangedView
-- [X] Spacing between the arrangedView and the UIStackView
-- [X] Works with all UIStackView's existing functionalities. including inserting and removing arrangedSubviews, getting arrangedSubviews, even animating spacing changes. Everything just works.
+- [X] Spacing between arrangedSubviews
+- [X] Spacing between the arrangedSubview and the UIStackView
+- [X] Works with all UIStackView's existing functionalities. including inserting and removing arrangedSubviews, getting arrangedSubviews, setting arrangedSubviews' `isHidden` property.
 
 ## Requirements
 - iOS 9.0 and above
 - Swift 4.2
-- Auto Layout
+- This library assumes you understand `UIStackView`, `Auto Layout` and their combination. For more, see [Auto Layout with UIStackView](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/AutolayoutPG/LayoutUsingStackViews.html#//apple_ref/doc/uid/TP40010853-CH11-SW1) 
+
+## Idea
 
 ## How to use
 ```swift

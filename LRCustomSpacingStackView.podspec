@@ -10,18 +10,18 @@ Pod::Spec.new do |s|
 
   s.name         = "LRCustomSpacingStackView"
 
-  s.version      = "1.0.0"
+  s.version      = "1.1.0"
 
-  s.summary      = "An UIStackView extension to support custom (left, right, top, bottom) spacing for arrangedSubviews."
+  s.summary      = "An UIStackView extension to make custom spacing easier to use, and also work on iOS 9. Written in Swift 4.2"
   
   s.description  = <<-DESC
 
-  UIStackView supports custom spacing along its axis after iOS 11.0.
+  UIStackView officially supports custom spacing on iOS 11. This library makes it easier to use, and also work on iOS 9 +.
   
-  This library:
-  1. provides custom spacing support for iOS 9.0 +
-  2. provides a more flexible and powerful way to add custom spacing by giving UIView a UIEdgeInsets
-  3. works well with all UIStackView's functionalities
+  1. Custom spacing support on iOS 9 and above
+  2. Spacing between arrangedSubviews
+  3. Spacing between the arrangedSubview and the UIStackView
+  4. Works with all UIStackView's existing functionalities. including inserting and removing arrangedSubviews, getting arrangedSubviews, setting arrangedSubviews' `isHidden` property.
 
   Requirements:
   1. iOS 9.0 +
