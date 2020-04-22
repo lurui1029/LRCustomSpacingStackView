@@ -30,7 +30,7 @@ import UIKit
 
 extension UIView {
     
-    /// The custom spacing insets for this view, used only if this view was or will be added to `UIStackView`  by `lr_addArrangedSubview(_:)` or `lr_insertArrangedSubview(_:at:)`. Setting this property will cause `UIStackView` re-layout immediately. To animate the change, set it in a `UIView` aniamation closure. The default value of this property is `UIEdgeInsets.zero`.
+    /// The custom spacing insets for this view, used only if this view was or will be added to `UIStackView`  by `lr_addArrangedSubview(_:)` or `lr_insertArrangedSubview(_:at:)`. Setting this property will take the change immediately. To animate the change, set it in a `UIView` aniamation closure. The default value of this property is `UIEdgeInsets.zero`.
     ///
     /// In a horizontal UIStackView, `.left` and `.right` define the spacing between this view and its siblings, `.top` and `.bottom` define the spacing between this view and the `UIStackView`.
     ///
@@ -38,15 +38,15 @@ extension UIView {
     ///
     /// For more on how `lr_stackSpacing` works under different conditions, see [LRCustomSpacingStackView wiki.](https://github.com/lurui1029/LRCustomSpacingStackView/wiki/)
     open var lr_stackSpacing: UIEdgeInsets {
+        get {
+            return insetsFromSpacingLayoutGuide()
+        }
         set {
-            if let guide = lr_spacingLayoutGuide() {
+            if let guide = spacingLayoutGuide() {
                 removeLayoutGuide(guide)
             }
-            lr_addSpacingLayoutGuide(with: newValue)
+            addSpacingLayoutGuide(with: newValue)
             updateDummyViewConstraints(with: newValue)
-        }
-        get {
-            return lr_insetsFromSpacingLayoutGuide()
         }
     }
 }
@@ -54,7 +54,7 @@ extension UIView {
 
 extension UIStackView {
     
-    /// Same as `init(arrangedSubviews:)`. If you want to spacing these views by their `lr_stackSpacing`, you must use this method instead of the original `init(arrangedSubviews:)`
+    /// Same as `init(arrangedSubviews:)`. If you intend to space these views by their `lr_stackSpacing`, you must use this method instead of the original `init(arrangedSubviews:)`
     public convenience init(lr_arrangedSubviews views: [UIView]) {
         self.init(arrangedSubviews: views.map{ LRDummyView(contentView: $0) })
     }
@@ -66,12 +66,12 @@ extension UIStackView {
         return arrangedSubviews.map { return ($0 as? LRDummyView)?.contentView ?? $0 }
     }
     
-    /// Same as `addArrangedSubviews(_:)`. If you want to spacing this view by its `lr_stackSpacing`, you must use this method instead of the original `addArrangedSubviews(_:)`
+    /// Same as `addArrangedSubviews(_:)`. If you intend to space this view by its `lr_stackSpacing`, you must use this method instead of the original `addArrangedSubviews(_:)`
     open func lr_addArrangedSubview(_ view: UIView) {
         addArrangedSubview(LRDummyView(contentView: view))
     }
     
-    /// Same as `removeArrangedSubview(_:)`. If the view was added by `lr_addArrangedSubview(_:)` or `lr_insertArrangedSubview(_:at:)`, to correctly remove the view, you must use this method or call `removeFromParent()` on the view.
+    /// Same as `removeArrangedSubview(_:)`. If the view was added by `lr_addArrangedSubview(_:)` or `lr_insertArrangedSubview(_:at:)`, you must use this method or call `removeFromParent()` on the view to correctly remove this view.
     ///
     /// If the view was not added by `lr_addArrangedSubview(_:)` or `lr_insertArrangedSubview(_:at:)`, you can still use this method to correctly remove the view. It would have no difference from the original one in this case.
     open func lr_removeArrangedSubview(_ view: UIView) {
@@ -83,14 +83,14 @@ extension UIStackView {
         }
     }
     
-    /// Same as `insertArrangedSubview(_:at:)`. If you want to spacing this view by its `lr_stackSpacing`, you must use this method instead of the original `insertArrangedSubview(_:at:)`
+    /// Same as `insertArrangedSubview(_:at:)`. If you intend to space this view by its `lr_stackSpacing`, you must use this method instead of the original `insertArrangedSubview(_:at:)`
     open func lr_insertArrangedSubview(_ view: UIView, at index: Int) {
         insertArrangedSubview(LRDummyView(contentView: view), at: index)
     }
 }
 
 
-// MARK: Privates
+// MARK: - Privates -
 
 fileprivate let guideIdentifier = "LRStackViewSpacingLayoutGuide"
 fileprivate let topConstraintIdentifier = "LRStackViewSpacingLayoutGuideTopConstraint"
@@ -100,11 +100,11 @@ fileprivate let leftConstraintIdentifier = "LRStackViewSpacingLayoutGuideLeftCon
 
 fileprivate extension UIView {
     
-    func lr_spacingLayoutGuide() -> UILayoutGuide? {
+    func spacingLayoutGuide() -> UILayoutGuide? {
         return layoutGuides.first { $0.identifier == guideIdentifier }
     }
     
-    func lr_addSpacingLayoutGuide(with insets: UIEdgeInsets) {
+    func addSpacingLayoutGuide(with insets: UIEdgeInsets) {
         let guide = UILayoutGuide()
         guide.identifier = guideIdentifier
         addLayoutGuide(guide)
@@ -119,8 +119,7 @@ fileprivate extension UIView {
         NSLayoutConstraint.activate([top, right, bottom, left])
     }
     
-    func lr_insetsFromSpacingLayoutGuide() -> UIEdgeInsets {
-        if lr_spacingLayoutGuide() == nil { return .zero }
+    func insetsFromSpacingLayoutGuide() -> UIEdgeInsets {
         var insets = UIEdgeInsets.zero
         constraints.forEach { constraint in
             if constraint.identifier == leftConstraintIdentifier {
@@ -146,6 +145,7 @@ fileprivate extension UIView {
     }
 }
 
+
 fileprivate class LRDummyView: UIView {
     
     var contentView: UIView
@@ -158,13 +158,13 @@ fileprivate class LRDummyView: UIView {
     
     var leftConstraint: NSLayoutConstraint!
     
-    private var observation: NSKeyValueObservation!
+    private var hiddenObservation: NSKeyValueObservation!
     
     init(contentView: UIView) {
         self.contentView = contentView
         super.init(frame: .zero)
         addSubview(contentView)
-        
+        contentView.translatesAutoresizingMaskIntoConstraints = false
         translatesAutoresizingMaskIntoConstraints = false
         let insets = contentView.lr_stackSpacing
         topConstraint = contentView.topAnchor.constraint(equalTo: topAnchor, constant: insets.top)
@@ -174,7 +174,7 @@ fileprivate class LRDummyView: UIView {
         NSLayoutConstraint.activate([topConstraint, rightConstraint, bottomConstraint, leftConstraint])
         
         isHidden = contentView.isHidden
-        observation = contentView.observe(\.isHidden) { [unowned self] (_, _) in
+        hiddenObservation = contentView.observe(\.isHidden) { [unowned self] (_, _) in
             self.isHidden = contentView.isHidden
         }
     }
