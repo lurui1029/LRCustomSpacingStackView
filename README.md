@@ -4,10 +4,8 @@
 [![Pod Platform](http://img.shields.io/cocoapods/p/LRCustomSpacingStackView.svg?style=flat)](http://cocoadocs.org/docsets/LRCustomSpacingStackView/)
 [![Swift Version](https://img.shields.io/badge/language-swift%204.2-brightgreen.svg)](https://developer.apple.com/swift) 
 [![Pod License](http://img.shields.io/cocoapods/l/LRCustomSpacingStackView.svg?style=flat)](https://mit-license.org)
-[![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
-[![996.icu](https://img.shields.io/badge/link-996.icu-red.svg)](https://996.icu)
 
-UIStackView officially supports custom spacing on iOS 11. This library makes it easier to use, and also work on iOS 9 +.
+UIStackView supports custom spacing on iOS 11. This library makes it easier to use, and work on iOS 9.
 
 ## Features
 - [x] Custom spacing support on iOS 9 and above
